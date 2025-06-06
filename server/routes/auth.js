@@ -5,9 +5,10 @@ const jwt = require("jsonwebtoken");
 const multer = require("multer");
 const path = require("path");
 const User = require("../models/User");
+const Notification = require("../models/Notification");
 const verifyToken = require("../middleware/verifyToken");
 
-// Multer setup for profile picture upload
+// Multer setup
 const storage = multer.diskStorage({
   destination: (req, file, cb) => {
     cb(null, path.join(__dirname, "..", "uploads"));
@@ -32,14 +33,13 @@ router.post("/register", async (req, res) => {
       return res.status(400).json({ message: "User already exists" });
 
     const hashedPassword = await bcrypt.hash(password, 10);
-    const newUser = new User({
-      name,
-      email,
-      password: hashedPassword,
-      role,
-    });
-
+    const newUser = new User({ name, email, password: hashedPassword, role });
     await newUser.save();
+
+    // Save a notification
+    const notification = new Notification({ message: `${name} joined the blog!` });
+    await notification.save();
+
     res.status(201).json({ message: "User registered successfully" });
   } catch (err) {
     console.error("Register error:", err);

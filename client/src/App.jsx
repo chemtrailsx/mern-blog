@@ -4,7 +4,8 @@ import Login from "./pages/Login";
 import Dashboard from "./pages/Dashboard";
 import CreatePost from "./pages/CreatePost";
 import Home from "./pages/Home";
-import PostDetail from "./pages/PostDetail"; // ✅ Import the PostDetail page
+import PostDetail from "./pages/PostDetail";
+import Notifications from "./pages/Notifications"; // ✅ NEW
 import ProtectedRoute from "./components/ProtectedRoute";
 import { AuthProvider } from "./context/AuthContext";
 
@@ -16,7 +17,7 @@ function App() {
           <Route path="/" element={<Home />} />
           <Route path="/register" element={<Register />} />
           <Route path="/login" element={<Login />} />
-          <Route path="/post/:id" element={<PostDetail />} /> {/* ✅ Route to post detail */}
+          <Route path="/post/:id" element={<PostDetail />} />
           <Route
             path="/dashboard"
             element={
@@ -30,6 +31,14 @@ function App() {
             element={
               <ProtectedRoute>
                 <CreatePost />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/notifications" // ✅ Added this
+            element={
+              <ProtectedRoute>
+                <Notifications />
               </ProtectedRoute>
             }
           />
