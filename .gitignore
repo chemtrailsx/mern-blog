@@ -1,0 +1,54 @@
+# Ignore Node modules (both frontend and backend)
+node_modules/
+client/node_modules/
+server/node_modules/
+
+# Ignore environment variables
+.env
+
+# Ignore uploaded images (user profile pics, post images, etc.)
+uploads/
+
+# Ignore build and dist folders
+build/
+dist/
+client/build/
+client/dist/
+
+# Ignore logs
+logs/
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# Ignore coverage reports
+coverage/
+
+# Ignore editor/IDE settings
+.vscode/
+.idea/
+*.suo
+*.njsproj
+*.sln
+
+# OS-specific files
+.DS_Store
+Thumbs.db
+
+# Cache and temp files
+.cache/
+.next/
+*.swp
+
+# Ignore test snapshots and results
+__snapshots__/
+test-results/
+
+# Ignore backend generated files
+*.pid
+*.seed
+
+# Optional: ignore .env backups or temp variations
+.env.*
+!*.env.example
