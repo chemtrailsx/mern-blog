@@ -5,17 +5,27 @@ function Notifications() {
   const { token } = useContext(AuthContext);
   const [notifications, setNotifications] = useState([]);
 
-  useEffect(() => {
-    const fetchNotifications = async () => {
-      const res = await fetch("http://localhost:5000/api/notifications", {
-        headers: { Authorization: `Bearer ${token}` },
-      });
-      const data = await res.json();
-      setNotifications(data);
-    };
+  const fetchNotifications = async () => {
+    const res = await fetch("http://localhost:5000/api/notifications", {
+      headers: { Authorization: `Bearer ${token}` },
+    });
+    const data = await res.json();
+    setNotifications(data);
+  };
 
+  useEffect(() => {
     fetchNotifications();
   }, [token]);
+
+  const markAllAsRead = async () => {
+    await fetch("http://localhost:5000/api/notifications/mark-all-read", {
+      method: "PUT",
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    });
+    fetchNotifications(); // Refresh after marking
+  };
 
   const styles = {
     container: {
@@ -24,6 +34,21 @@ function Notifications() {
       padding: "30px",
       color: "#c9d1d9",
       fontFamily: "Segoe UI, sans-serif",
+    },
+    header: {
+      display: "flex",
+      justifyContent: "space-between",
+      alignItems: "center",
+      marginBottom: "20px",
+    },
+    button: {
+      backgroundColor: "#238636",
+      color: "white",
+      border: "none",
+      padding: "8px 14px",
+      borderRadius: "6px",
+      cursor: "pointer",
+      fontWeight: 500,
     },
     notification: {
       backgroundColor: "#161b22",
@@ -41,7 +66,14 @@ function Notifications() {
 
   return (
     <div style={styles.container}>
-      <h2>🔔 Notifications</h2>
+      <div style={styles.header}>
+        <h2>🔔 Notifications</h2>
+        {notifications.length > 0 && (
+          <button style={styles.button} onClick={markAllAsRead}>
+            Mark all as read
+          </button>
+        )}
+      </div>
       {notifications.length > 0 ? (
         notifications.map((n, idx) => (
           <div key={idx} style={styles.notification}>

@@ -3,12 +3,14 @@ const multer = require("multer");
 const express = require("express");
 const router = express.Router();
 const Post = require("../models/Post");
+const User = require("../models/User");
+const Notification = require("../models/Notification");
 const verifyToken = require("../middleware/verifyToken");
 
 // Multer config
 const storage = multer.diskStorage({
   destination: function (req, file, cb) {
-    cb(null, path.join(__dirname, "..", "uploads")); // Uploads to /server/uploads
+    cb(null, path.join(__dirname, "..", "uploads"));
   },
   filename: function (req, file, cb) {
     const ext = path.extname(file.originalname);
@@ -71,7 +73,7 @@ router.get("/:id", async (req, res) => {
   }
 });
 
-// Create a new post
+// Create a new post (and add notification)
 router.post("/", verifyToken, upload.single("image"), async (req, res) => {
   const { title, content, category } = req.body;
 
@@ -91,6 +93,12 @@ router.post("/", verifyToken, upload.single("image"), async (req, res) => {
     });
 
     const savedPost = await newPost.save();
+
+    // Add notification
+    const author = await User.findById(req.user.id);
+    const message = `${author.username} posted: "${savedPost.title}"`;
+    await Notification.create({ message });
+
     res.status(201).json(savedPost);
   } catch (err) {
     console.error("Post creation error:", err);
